@@ -24,8 +24,6 @@
 
 namespace phpseclib\Crypt;
 
-use phpseclib\Crypt\Common\BlockCipher;
-
 /**
  * Pure-PHP Random Number Generator
  *
@@ -33,7 +31,7 @@ use phpseclib\Crypt\Common\BlockCipher;
  * @author  Jim Wigginton <terrafrost@php.net>
  * @access  public
  */
-class Random
+abstract class Random
 {
     /**
      * Generate a random string.
@@ -46,8 +44,12 @@ class Random
      * @throws \RuntimeException if a symmetric cipher is needed but not loaded
      * @return string
      */
-    static function string($length)
+    public static function string($length)
     {
+        if (!$length) {
+            return '';
+        }
+
         try {
             return \random_bytes($length);
         } catch (\Exception $e) {
@@ -71,11 +73,11 @@ class Random
         // PHP isn't low level to be able to use those as sources and on a web server there's not likely
         // going to be a ton of keyboard or mouse action. web servers do have one thing that we can use
         // however, a ton of people visiting the website. obviously you don't want to base your seeding
-        // soley on parameters a potential attacker sends but (1) not everything in $_SERVER is controlled
+        // solely on parameters a potential attacker sends but (1) not everything in $_SERVER is controlled
         // by the user and (2) this isn't just looking at the data sent by the current user - it's based
         // on the data sent by all users. one user requests the page and a hash of their info is saved.
         // another user visits the page and the serialization of their data is utilized along with the
-        // server envirnment stuff and a hash of the previous http request data (which itself utilizes
+        // server environment stuff and a hash of the previous http request data (which itself utilizes
         // a hash of the session data before that). certainly an attacker should be assumed to have
         // full control over his own http requests. he, however, is not going to have control over
         // everyone's http requests.
@@ -141,19 +143,19 @@ class Random
             // http://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator#Designs_based_on_cryptographic_primitives
             switch (true) {
                 case class_exists('\phpseclib\Crypt\AES'):
-                    $crypto = new AES(BlockCipher::MODE_CTR);
+                    $crypto = new AES('ctr');
                     break;
                 case class_exists('\phpseclib\Crypt\Twofish'):
-                    $crypto = new Twofish(BlockCipher::MODE_CTR);
+                    $crypto = new Twofish('ctr');
                     break;
                 case class_exists('\phpseclib\Crypt\Blowfish'):
-                    $crypto = new Blowfish(BlockCipher::MODE_CTR);
+                    $crypto = new Blowfish('ctr');
                     break;
                 case class_exists('\phpseclib\Crypt\TripleDES'):
-                    $crypto = new TripleDES(BlockCipher::MODE_CTR);
+                    $crypto = new TripleDES('ctr');
                     break;
                 case class_exists('\phpseclib\Crypt\DES'):
-                    $crypto = new DES(BlockCipher::MODE_CTR);
+                    $crypto = new DES('ctr');
                     break;
                 case class_exists('\phpseclib\Crypt\RC4'):
                     $crypto = new RC4();
@@ -184,6 +186,7 @@ class Random
             $v = $crypto->encrypt($r ^ $i); // strlen($r) == 20
             $result.= $r;
         }
+
         return substr($result, 0, $length);
     }
 
@@ -191,11 +194,10 @@ class Random
      * Safely serialize variables
      *
      * If a class has a private __sleep() it'll emit a warning
-     *
+     * @return mixed
      * @param mixed $arr
-     * @access public
      */
-    static function safe_serialize(&$arr)
+    private static function safe_serialize(&$arr)
     {
         if (is_object($arr)) {
             return '';
@@ -207,7 +209,7 @@ class Random
         if (isset($arr['__phpseclib_marker'])) {
             return '';
         }
-        $safearr = array();
+        $safearr = [];
         $arr['__phpseclib_marker'] = true;
         foreach (array_keys($arr) as $key) {
             // do not recurse on the '__phpseclib_marker' key itself, for smaller memory usage

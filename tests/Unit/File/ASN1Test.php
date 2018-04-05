@@ -15,53 +15,53 @@ class Unit_File_ASN1Test extends PhpseclibTestCase
      */
     public function testAnyString()
     {
-        $KDC_REP = array(
+        $KDC_REP = [
             'type' => ASN1::TYPE_SEQUENCE,
-            'children' => array(
-                'pvno' => array(
+            'children' => [
+                'pvno' => [
                     'constant' => 0,
                     'optional' => true,
                     'explicit' => true,
-                    'type' => ASN1::TYPE_ANY),
-                'msg-type' => array(
+                    'type' => ASN1::TYPE_ANY],
+                'msg-type' => [
                     'constant' => 1,
                     'optional' => true,
                     'explicit' => true,
-                    'type' => ASN1::TYPE_ANY),
-                'padata' => array(
+                    'type' => ASN1::TYPE_ANY],
+                'padata' => [
                     'constant' => 2,
                     'optional' => true,
                     'explicit' => true,
-                    'type' => ASN1::TYPE_ANY),
-                'crealm' => array(
+                    'type' => ASN1::TYPE_ANY],
+                'crealm' => [
                     'constant' => 3,
                     'optional' => true,
                     'explicit' => true,
-                    'type' => ASN1::TYPE_ANY),
-                'cname' => array(
+                    'type' => ASN1::TYPE_ANY],
+                'cname' => [
                     'constant' => 4,
                     'optional' => true,
                     'explicit' => true,
-                    'type' => ASN1::TYPE_ANY),
-                'ticket' => array(
+                    'type' => ASN1::TYPE_ANY],
+                'ticket' => [
                     'constant' => 5,
                     'optional' => true,
                     'explicit' => true,
-                    'type' => ASN1::TYPE_ANY),
-                'enc-part' => array(
+                    'type' => ASN1::TYPE_ANY],
+                'enc-part' => [
                     'constant' => 6,
                     'optional' => true,
                     'explicit' => true,
-                    'type' => ASN1::TYPE_ANY)
-            )
-        );
+                    'type' => ASN1::TYPE_ANY]
+            ]
+        ];
 
-        $AS_REP = array(
+        $AS_REP = [
             'class'    => ASN1::CLASS_APPLICATION,
             'cast'     => 11,
             'optional' => true,
             'explicit' => true
-        ) + $KDC_REP;
+        ] + $KDC_REP;
 
         $str = 'a4IC3jCCAtqgAwIBBaEDAgELoi8wLTAroQMCAROiJAQiMCAwHqADAgEXoRcbFUNSRUFUVUlUWS5ORVR0ZXN0dXNlcqMPGw' .
                '1DUkVBVFVJVFkuTkVUpBUwE6ADAgEBoQwwChsIdGVzdHVzZXKlggFOYYIBSjCCAUagAwIBBaEPGw1DUkVBVFVJVFkuTkVU' .
@@ -75,9 +75,8 @@ class Unit_File_ASN1Test extends PhpseclibTestCase
                '4P3wep6uNMLnLzXJmUaAMaopjE+MOcai/t6T9Vg4pERF5Waqwg5ibAbVGK19HuS4LiKiaY3JsyYBuNkEDwiqM7i1Ekw3V+' .
                '+zoEIxqgXjGgPdrWkzU/H6rnXiqMtiZZqUXwWY0zkCmy';
 
-        $asn1 = new ASN1();
-        $decoded = $asn1->decodeBER(base64_decode($str));
-        $result = $asn1->asn1map($decoded[0], $AS_REP);
+        $decoded = ASN1::decodeBER(base64_decode($str));
+        $result = ASN1::asn1map($decoded[0], $AS_REP);
 
         $this->assertInternalType('array', $result);
     }
@@ -88,132 +87,132 @@ class Unit_File_ASN1Test extends PhpseclibTestCase
      */
     public function testIncorrectString()
     {
-        $PA_DATA = array(
+        $PA_DATA = [
             'type' => ASN1::TYPE_SEQUENCE,
-            'children' => array(
-                'padata-type' => array(
+            'children' => [
+                'padata-type' => [
                     'constant' => 1,
                     'optional' => true,
                     'explicit' => true,
                     'type' => ASN1::TYPE_INTEGER
-                ),
-                'padata-value' => array(
+                ],
+                'padata-value' => [
                     'constant' => 2,
                     'optional' => true,
                     'explicit' => true,
                     'type' => ASN1::TYPE_OCTET_STRING
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
-        $PrincipalName = array(
+        $PrincipalName = [
             'type' => ASN1::TYPE_SEQUENCE,
-            'children' => array(
-                'name-type' => array(
+            'children' => [
+                'name-type' => [
                     'constant' => 0,
                     'optional' => true,
                     'explicit' => true,
                     'type' => ASN1::TYPE_INTEGER
-                ),
-                'name-string' => array(
+                ],
+                'name-string' => [
                     'constant' => 1,
                     'optional' => true,
                     'explicit' => true,
                     'min' => 0,
                     'max' => -1,
                     'type' => ASN1::TYPE_SEQUENCE,
-                    'children' => array('type' => ASN1::TYPE_IA5_STRING) // should be \phpseclib\File\ASN1::TYPE_GENERAL_STRING
-                )
-            )
-        );
+                    'children' => ['type' => ASN1::TYPE_IA5_STRING] // should be \phpseclib\File\ASN1::TYPE_GENERAL_STRING
+                ]
+            ]
+        ];
 
-        $Ticket = array(
+        $Ticket = [
             'class'    => ASN1::CLASS_APPLICATION,
             'cast'     => 1,
             'optional' => true,
             'explicit' => true,
             'type' => ASN1::TYPE_SEQUENCE,
-            'children' => array(
-                'tkt-vno' => array(
+            'children' => [
+                'tkt-vno' => [
                     'constant' => 0,
                     'optional' => true,
                     'explicit' => true,
                     'type' => ASN1::TYPE_INTEGER
-                ),
-                'realm' => array(
+                ],
+                'realm' => [
                     'constant' => 1,
                     'optional' => true,
                     'explicit' => true,
                     'type' => ASN1::TYPE_ANY
-                ),
-                'sname' => array(
+                ],
+                'sname' => [
                     'constant' => 2,
                     'optional' => true,
                     'explicit' => true,
                     'type' => ASN1::TYPE_ANY
-                ),
-                'enc-part' => array(
+                ],
+                'enc-part' => [
                     'constant' => 3,
                     'optional' => true,
                     'explicit' => true,
                     'type' => ASN1::TYPE_ANY
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
-        $KDC_REP = array(
+        $KDC_REP = [
             'type' => ASN1::TYPE_SEQUENCE,
-            'children' => array(
-                'pvno' => array(
+            'children' => [
+                'pvno' => [
                     'constant' => 0,
                     'optional' => true,
                     'explicit' => true,
-                    'type' => ASN1::TYPE_INTEGER),
-                'msg-type' => array(
+                    'type' => ASN1::TYPE_INTEGER],
+                'msg-type' => [
                      'constant' => 1,
                     'optional' => true,
                     'explicit' => true,
-                    'type' => ASN1::TYPE_INTEGER),
-                'padata' => array(
+                    'type' => ASN1::TYPE_INTEGER],
+                'padata' => [
                     'constant' => 2,
                     'optional' => true,
                     'explicit' => true,
                     'min' => 0,
                     'max' => -1,
                     'type' => ASN1::TYPE_SEQUENCE,
-                    'children' => $PA_DATA),
-                'crealm' => array(
+                    'children' => $PA_DATA],
+                'crealm' => [
                     'constant' => 3,
                     'optional' => true,
                     'explicit' => true,
-                    'type' => ASN1::TYPE_OCTET_STRING),
-                'cname' => array(
+                    'type' => ASN1::TYPE_OCTET_STRING],
+                'cname' => [
                     'constant' => 4,
                     'optional' => true,
-                    'explicit' => true) + $PrincipalName,
+                    'explicit' => true] + $PrincipalName,
                     //'type' => ASN1::TYPE_ANY),
-                'ticket' => array(
+                'ticket' => [
                     'constant' => 5,
                     'optional' => true,
                     'implicit' => true,
                     'min' => 0,
                     'max' => 1,
                     'type' => ASN1::TYPE_SEQUENCE,
-                    'children' => $Ticket),
-                'enc-part' => array(
+                    'children' => $Ticket],
+                'enc-part' => [
                     'constant' => 6,
                     'optional' => true,
                     'explicit' => true,
-                    'type' => ASN1::TYPE_ANY)
-            )
-        );
+                    'type' => ASN1::TYPE_ANY]
+            ]
+        ];
 
-        $AS_REP = array(
+        $AS_REP = [
             'class'    => ASN1::CLASS_APPLICATION,
             'cast'     => 11,
             'optional' => true,
             'explicit' => true
-        ) + $KDC_REP;
+        ] + $KDC_REP;
 
         $str = 'a4IC3jCCAtqgAwIBBaEDAgELoi8wLTAroQMCAROiJAQiMCAwHqADAgEXoRcbFUNSRUFUVUlUWS5ORVR0ZXN0dXNlcqMPGw' .
                '1DUkVBVFVJVFkuTkVUpBUwE6ADAgEBoQwwChsIdGVzdHVzZXKlggFOYYIBSjCCAUagAwIBBaEPGw1DUkVBVFVJVFkuTkVU' .
@@ -227,9 +226,8 @@ class Unit_File_ASN1Test extends PhpseclibTestCase
                '4P3wep6uNMLnLzXJmUaAMaopjE+MOcai/t6T9Vg4pERF5Waqwg5ibAbVGK19HuS4LiKiaY3JsyYBuNkEDwiqM7i1Ekw3V+' .
                '+zoEIxqgXjGgPdrWkzU/H6rnXiqMtiZZqUXwWY0zkCmy';
 
-        $asn1 = new ASN1();
-        $decoded = $asn1->decodeBER(base64_decode($str));
-        $result = $asn1->asn1map($decoded[0], $AS_REP);
+        $decoded = ASN1::decodeBER(base64_decode($str));
+        $result = ASN1::asn1map($decoded[0], $AS_REP);
 
         $this->assertInternalType('array', $result);
     }
@@ -239,8 +237,7 @@ class Unit_File_ASN1Test extends PhpseclibTestCase
      */
     public function testIndefiniteLength()
     {
-        $asn1 = new ASN1();
-        $decoded = $asn1->decodeBER(file_get_contents(dirname(__FILE__) . '/ASN1/FE.pdf.p7m'));
+        $decoded = ASN1::decodeBER(file_get_contents(dirname(__FILE__) . '/ASN1/FE.pdf.p7m'));
         $this->assertCount(5, $decoded[0]['content'][1]['content'][0]['content']); // older versions would have returned 3
     }
 
@@ -264,8 +261,7 @@ class Unit_File_ASN1Test extends PhpseclibTestCase
                'AAOBgQAhrNWuyjSJWsKrUtKyNGadeqvu5nzVfsJcKLt0AMkQH0IT/GmKHiSgAgDp' .
                'ulvKGQSy068Bsn5fFNum21K5mvMSf3yinDtvmX3qUA12IxL/92ZzKbeVCq3Yi7Le' .
                'IOkKcGQRCMha8X2e7GmlpdWC1ycenlbN0nbVeSv3JUMcafC4+Q==';
-        $asn1 = new ASN1();
-        $decoded = $asn1->decodeBER(base64_decode($str));
+        $decoded = ASN1::decodeBER(base64_decode($str));
         $this->assertCount(3, $decoded[0]['content']);
     }
 
@@ -274,8 +270,7 @@ class Unit_File_ASN1Test extends PhpseclibTestCase
      */
     public function testContextSpecificNonConstructed()
     {
-        $asn1 = new ASN1();
-        $decoded = $asn1->decodeBER(base64_decode('MBaAFJtUo7c00HsI5EPZ4bkICfkOY2Pv'));
+        $decoded = ASN1::decodeBER(base64_decode('MBaAFJtUo7c00HsI5EPZ4bkICfkOY2Pv'));
         $this->assertInternalType('string', $decoded[0]['content'][0]['content']);
     }
 
@@ -284,8 +279,7 @@ class Unit_File_ASN1Test extends PhpseclibTestCase
      */
     public function testEmptyContextTag()
     {
-        $asn1 = new ASN1();
-        $decoded = $asn1->decodeBER("\xa0\x00");
+        $decoded = ASN1::decodeBER("\xa0\x00");
         $this->assertInternalType('array', $decoded);
         $this->assertCount(0, $decoded[0]['content']);
     }
@@ -295,8 +289,19 @@ class Unit_File_ASN1Test extends PhpseclibTestCase
      */
     public function testInfiniteLoop()
     {
-        $asn1 = new ASN1();
         $data = base64_decode('MD6gJQYKKwYBBAGCNxQCA6AXDBVvZmZpY2VAY2VydGRpZ2l0YWwucm+BFW9mZmljZUBjZXJ0ZGlnaXRhbC5ybw==');
-        $asn1->decodeBER($data);
+        ASN1::decodeBER($data);
+    }
+
+    public function testMaps()
+    {
+        $files = scandir('phpseclib/File/ASN1/Maps');
+        foreach ($files as $file) {
+            if ($file == '.' || $file == '..') {
+                continue;
+            }
+
+            constant('phpseclib\\File\\ASN1\\Maps\\' . basename($file, '.php') . '::MAP');
+        }
     }
 }

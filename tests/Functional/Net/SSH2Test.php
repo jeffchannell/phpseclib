@@ -14,8 +14,9 @@ class Functional_Net_SSH2Test extends PhpseclibFunctionalTestCase
     {
         $ssh = new SSH2($this->getEnv('SSH_HOSTNAME'));
 
-        $this->assertTrue(
-            is_object($ssh),
+        $this->assertInternalType(
+            'object',
+            $ssh,
             'Could not construct NET_SSH2 object.'
         );
 
@@ -108,12 +109,16 @@ class Functional_Net_SSH2Test extends PhpseclibFunctionalTestCase
      */
     public function testExecWithMethodCallback($ssh)
     {
-        $callbackObject = $this->getMock('stdClass', array('callbackMethod'));
+        $callbackObject = $this->getMockBuilder('stdClass')
+            ->setMethods(array('callbackMethod'))
+            ->getMock();
         $callbackObject
             ->expects($this->atLeastOnce())
             ->method('callbackMethod')
             ->will($this->returnValue(true));
-        $ssh->exec('pwd', array($callbackObject, 'callbackMethod'));
+        $ssh->exec('pwd', [$callbackObject, 'callbackMethod']);
+
+        return $ssh;
     }
 
     public function testGetServerPublicHostKey()
@@ -134,5 +139,37 @@ class Functional_Net_SSH2Test extends PhpseclibFunctionalTestCase
             $ssh->login($username, $password),
             'SSH2 login using an open socket failed.'
         );
+    }
+
+    /**
+     * @depends testExecWithMethodCallback
+     * @group github1009
+     */
+    public function testDisablePTY($ssh)
+    {
+        $ssh->enablePTY();
+        $ssh->exec('ls -latr');
+        $ssh->disablePTY();
+        $ssh->exec('pwd');
+
+        return $ssh;
+    }
+
+    /**
+     * @depends testDisablePTY
+     * @group github1167
+     */
+    public function testChannelDataAfterOpen($ssh)
+    {
+        $ssh->write("ping 127.0.0.1\n");
+
+        $ssh->enablePTY();
+        $ssh->exec('bash');
+
+        $ssh->write("ls -latr\n");
+
+        $ssh->setTimeout(1);
+
+        $ssh->read();
     }
 }

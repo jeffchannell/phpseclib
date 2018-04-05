@@ -68,7 +68,7 @@ class AES extends Rijndael
      * @param int $length
      * @throws \BadMethodCallException anytime it's called
      */
-    function setBlockLength($length)
+    public function setBlockLength($length)
     {
         throw new \BadMethodCallException('The block length cannot be set for AES.');
     }
@@ -83,7 +83,7 @@ class AES extends Rijndael
      * @param int $length
      * @throws \LengthException if the key length isn't supported
      */
-    function setKeyLength($length)
+    public function setKeyLength($length)
     {
         switch ($length) {
             case 128:
@@ -107,7 +107,7 @@ class AES extends Rijndael
      * @param string $key
      * @throws \LengthException if the key length isn't supported
      */
-    function setKey($key)
+    public function setKey($key)
     {
         switch (strlen($key)) {
             case 16:

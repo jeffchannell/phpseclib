@@ -5,9 +5,9 @@
  * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
  */
 
-abstract class PhpseclibTestCase extends PHPUnit_Framework_TestCase
+abstract class PhpseclibTestCase extends PHPUnit\Framework\TestCase
 {
-    protected $tempFilesToUnlinkOnTearDown = array();
+    protected $tempFilesToUnlinkOnTearDown = [];
 
     public function tearDown()
     {
@@ -100,5 +100,21 @@ abstract class PhpseclibTestCase extends PHPUnit_Framework_TestCase
                 self::markTestSkipped("Failed to reimport file $filename");
             }
         }
+    }
+
+    protected static function getVar($obj, $var)
+    {
+        $reflection = new ReflectionClass(get_class($obj));
+        $prop = $reflection->getProperty($var);
+        $prop->setAccessible(true);
+        return $prop->getValue($obj);
+    }
+
+    public static function callFunc($obj, $func, $params = [])
+    {
+        $reflection = new ReflectionClass(get_class($obj));
+        $method = $reflection->getMethod($func);
+        $method->setAccessible(true);
+        return $method->invokeArgs($obj, $params);
     }
 }
